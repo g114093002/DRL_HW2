@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>強化學習實驗報告：Q-Learning vs SARSA</title>
+    <meta name="description" content="本報告比較了 Q-Learning 與 SARSA 在 Cliff Walking 環境中的表現，分析其收斂速度、穩定性與策略差異。">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>強化學習實驗：Cliff Walking</h1>
+            <p class="subtitle">深度分析 Q-Learning (Off-policy) 與 SARSA (On-policy) 的權衡</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Learning Curves -->
+            <div class="card full-width">
+                <h2>📈 學習表現 (Learning Curves)</h2>
+                <div class="chart-container">
+                    <canvas id="rewardChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Path Visualization -->
+            <div class="card">
+                <h2>🗺️ Q-Learning 最優路徑</h2>
+                <div id="qlGrid" class="grid-container"></div>
+                <div class="analysis-content" style="margin-top: 1rem;">
+                    <p class="badge badge-ql">冒險型策略</p>
+                    <p>Q-Learning 傾向學習「最優」路徑，緊貼懸崖邊緣以縮短步數。</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🛡️ SARSA 最優路徑</h2>
+                <div id="sarsaGrid" class="grid-container"></div>
+                <div class="analysis-content" style="margin-top: 1rem;">
+                    <p class="badge badge-sarsa">保守型策略</p>
+                    <p>SARSA 考慮到探索 (ε) 可能導致掉落，傾向選擇繞路以確保安全。</p>
+                </div>
+            </div>
+
+            <!-- Theoretical Comparison -->
+            <div class="card full-width">
+                <h2>📚 理論分析與實驗結論</h2>
+                <div class="analysis-content">
+                    <div class="analysis-item">
+                        <strong>1. 演算法本質差異</strong>
+                        <p>Q-Learning 是<strong>離策略 (Off-policy)</strong>，它假設下一狀態會採取最優行動 ($max_a Q(s', a)$)；SARSA 是<strong>同策略 (On-policy)</strong>，它基於實際採取的下一個行動 ($Q(s', a')$) 進行更新，這意即 SARSA 會在訓練中考量到隨機探索帶來的風險。</p>
+                    </div>
+                    <div class="analysis-item">
+                        <strong>2. 穩定性與收斂速度</strong>
+                        <p>實驗結果顯示，Q-Learning 在收斂到最佳路徑的過程中波動較大（因為經常觸發懸崖懲罰），但最終能找到最短路徑。SARSA 的學習過程相對穩定，且在存在探索噪聲的情況下，其線上表現 (On-line performance) 優於 Q-Learning。</p>
+                    </div>
+                    <div class="analysis-item">
+                        <strong>3. 應用情境建議</strong>
+                        <p>若環境本身容錯率高，且追求極致效率，應選擇 <strong>Q-Learning</strong>。若環境存在重大懲罰（如：實體機器人可能損毀），應優先選擇 <strong>SARSA</strong> 以維持訓練過程的安全性。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>HW2 Reinforced Learning Report • Created by Antigravity</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
